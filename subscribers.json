@@ -1,0 +1,130 @@
+{
+  "subscribers": [
+    {
+      "subscriber": "John Smith",
+      "homeId": "KD34AF24DS",
+      "boilerType": "Boiler 1200W",
+      "airConditionerType": "Air p5600",
+      "temperatures": [
+        {
+          "period": "00-08",
+          "temperature": 20
+        },
+        {
+          "period": "08-12",
+          "temperature": 21.5
+        },
+        {
+          "period": "12-16",
+          "temperature": 22
+        },
+        {
+          "period": "16-24",
+          "temperature": 23
+        }
+      ]
+    },
+    {
+      "subscriber": "Paul Doe",
+      "homeId": "LRKE4LE234D",
+      "boilerType": "Boiler 1400L",
+      "airConditionerType": "Air c3200",
+      "temperatures": [
+        {
+          "period": "00-12",
+          "temperature": 20
+        },
+        {
+          "period": "12-18",
+          "temperature": 21.5
+        },
+        {
+          "period": "18-24",
+          "temperature": 20
+        }
+      ]
+    },
+    {
+      "subscriber": "Finlay Winter",
+      "homeId": "TE34WS3224",
+      "boilerType": "Boiler p5600",
+      "airConditionerType": "",
+      "temperatures": [
+        {
+          "period": "00-04",
+          "temperature": 18
+        },
+        {
+          "period": "04-08",
+          "temperature": 19
+        },
+        {
+          "period": "08-12",
+          "temperature": 20
+        },
+        {
+          "period": "12-16",
+          "temperature": 21
+        },
+        {
+          "period": "16-20",
+          "temperature": 22
+        },
+        {
+          "period": "20-24",
+          "temperature": 20
+        }
+      ]
+    },
+    {
+      "subscriber": "Joshua Coleman",
+      "homeId": "TTLR3234ZZ",
+      "boilerType": "",
+      "airConditionerType": "Air c3200",
+      "temperatures": [
+        {
+          "period": "00-12",
+          "temperature": 18
+        },
+        {
+          "period": "12-24",
+          "temperature": 20
+        }
+      ]
+    },
+    {
+      "subscriber": "Taylor Atkinson",
+      "homeId": "EEI23EE12D",
+      "boilerType": "Boiler tw560",
+      "airConditionerType": "Air c3200",
+      "temperatures": [
+        {
+          "period": "00-06",
+          "temperature": 18
+        },
+        {
+          "period": "06-08",
+          "temperature": 18
+        },
+        {
+          "period": "08-12",
+          "temperature": 20
+        },
+        {
+          "period": "12-16",
+          "temperature": 22
+        },
+        {
+          "period": "16-20",
+          "temperature": 20
+        },
+        {
+          "period": "20-24",
+          "temperature": 18
+        }
+      ]
+    }
+
+  ]
+}
+
