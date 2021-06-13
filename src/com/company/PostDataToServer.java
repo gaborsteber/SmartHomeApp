@@ -23,7 +23,7 @@ public class PostDataToServer {
         item.put("airConditionerCommand", "bX5676");
         System.out.println(item.getString("boilerCommand"));
         message = item.toString();
-//      System.out.println(message);
+      System.out.println(message);
         try(OutputStream os = conn.getOutputStream()){
             byte[] input = message.getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);

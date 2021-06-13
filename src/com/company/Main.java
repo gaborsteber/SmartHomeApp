@@ -20,15 +20,15 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-        try {
-            iMonitor getDataForMonitoring = new Monitor();
-            getDataForMonitoring.getSession("KD34AF24DS");
-            Session monitoredData = getDataForMonitoring.getMonitoredHome();
-            System.out.println(monitoredData.getSessionId() + " - " + monitoredData.getTemperature() + " - " + monitoredData.isBoilerState() + " - " + monitoredData.isBoilerState());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//      Testing: data from server: 95FCR - 18 - true - true
+//        try {
+//            iMonitor getDataForMonitoring = new Monitor();
+//            getDataForMonitoring.getSession("KD34AF24DS");
+//            Session monitoredData = getDataForMonitoring.getMonitoredHome();
+//            System.out.println(monitoredData.getSessionId() + " - " + monitoredData.getTemperature() + " - " + monitoredData.isBoilerState() + " - " + monitoredData.isBoilerState());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+////      Testing: data from server: 95FCR - 18 - true - true
 
 //        try {
 //            PostDataToServer.postDataTo();
@@ -36,7 +36,7 @@ public class Main {
 //        catch(Exception e) {
 //            e.printStackTrace();
 //        }
-
+//        TODO: implement POST method in Driver class
 //      try{
 //          iLoader subscribersFromFile = new Loader();
 //          subscribersList = subscribersFromFile.loadSubscribersToList("subscribers.json");
