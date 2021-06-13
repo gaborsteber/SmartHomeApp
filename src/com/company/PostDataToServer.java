@@ -11,6 +11,9 @@ import org.json.JSONObject;
 public class PostDataToServer {
 
     public static void postDataTo() throws Exception {
+        /*TODO: a postDataToServer osztaly nem kell, hanem az alabbi a PostdataTo bekerul az Driverbe, ahol
+        majd a konkret utasitasokat kuldi ki. Át kell alakaítani, aztan refactorral torolni kell. A neve majd
+        a feladat 5.3 pontja szerint CommandService lesz.*/
         URL url = new URL("http://193.6.19.58:8182/smarthome/KD34AF24DS");
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setRequestMethod("POST");
@@ -29,7 +32,7 @@ public class PostDataToServer {
             os.write(input, 0, input.length);
         }
         try(BufferedReader br = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
             String responseLine = null;
             while ((responseLine = br.readLine()) != null) {
