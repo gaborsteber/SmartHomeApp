@@ -1,15 +1,19 @@
 package com.company;
+
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
+
 import java.io.*;
 import java.util.*;
 
 
-public class Loader implements iLoader{
+public class Loader implements iLoader {
     private List<Subscriber> subscribers;
 
     @Override
-    public List<Subscriber> getSubscribers(){ return subscribers; }
+    public List<Subscriber> getSubscribers() {
+        return subscribers;
+    }
 
     @Override
     public void loadSubscribers(String fajlNev) throws Exception {
@@ -29,7 +33,7 @@ public class Loader implements iLoader{
                 JSONArray newArray = (JSONArray) valasz.get("temperatures");
                 Iterator<org.json.simple.JSONObject> iterate = newArray.iterator();
 
-                while(iterate.hasNext()) {
+                while (iterate.hasNext()) {
                     org.json.JSONObject myTemps = new org.json.JSONObject(iterate.next().toString());
                     Temperature newTemp = new Temperature(myTemps.getString("period"), myTemps.getInt("temperature"));
 //                    System.out.println(newTemp.period +" , " + newTemp.temperature);  //Print test - data valid
@@ -46,9 +50,10 @@ public class Loader implements iLoader{
             e.printStackTrace();
         }
 
-        }
+    }
+
     @Override
-   public List<Subscriber> loadSubscribersToList(String fajlNev) throws Exception {
+    public List<Subscriber> loadSubscribersToList(String fajlNev) throws Exception {
         JSONParser parser = new JSONParser();
         List<Subscriber> subscriberList = new ArrayList<Subscriber>();
 
@@ -65,7 +70,7 @@ public class Loader implements iLoader{
                 JSONArray newArray = (JSONArray) valasz.get("temperatures");
                 Iterator<org.json.simple.JSONObject> iterate = newArray.iterator();
 
-                while(iterate.hasNext()) {
+                while (iterate.hasNext()) {
                     org.json.JSONObject myTemps = new org.json.JSONObject(iterate.next().toString());
                     Temperature newTemp = new Temperature(myTemps.getString("period"), myTemps.getInt("temperature"));
 //                    System.out.println(newTemp.period +" , " + newTemp.temperature);  //Print test - data valid
@@ -80,7 +85,7 @@ public class Loader implements iLoader{
             e.printStackTrace();
         }
         return subscriberList;
-   }
+    }
 
 }
 
