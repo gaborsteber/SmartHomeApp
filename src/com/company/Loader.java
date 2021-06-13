@@ -32,14 +32,14 @@ public class Loader implements iLoader{
                 while(iterate.hasNext()) {
                     org.json.JSONObject myTemps = new org.json.JSONObject(iterate.next().toString());
                     Temperature newTemp = new Temperature(myTemps.getString("period"), myTemps.getInt("temperature"));
-                    //System.out.println(newTemp.period +" , " + newTemp.temperature);
+//                    System.out.println(newTemp.period +" , " + newTemp.temperature);  //Print test - data valid
                     subscriberTemp.add(newTemp);
                 }
                 Subscriber newOne = new Subscriber(myResponse.getString("subscriber"), myResponse.getString("homeId"), myResponse.getString("boilerType"), myResponse.getString("airConditionerType"), subscriberTemp);
                 subscriberList.add(newOne);
-                //newOne.printSubscriber(); // Print test
+//                newOne.printSubscriber();     //Print test - data valid!
                 subscriberTemp.clear();
-                //subscriberList.get(0).printSubscriber(); Print test
+//                subscriberList.get(0).printSubscriber();  //Print test - data valid!
             }
             this.subscribers = new ArrayList<Subscriber>(subscriberList);
         } catch (Exception e) {
@@ -68,11 +68,11 @@ public class Loader implements iLoader{
                 while(iterate.hasNext()) {
                     org.json.JSONObject myTemps = new org.json.JSONObject(iterate.next().toString());
                     Temperature newTemp = new Temperature(myTemps.getString("period"), myTemps.getInt("temperature"));
-                    //System.out.println(newTemp.period +" , " + newTemp.temperature);
+//                    System.out.println(newTemp.period +" , " + newTemp.temperature);  //Print test - data valid
                     subscriberTemp.add(newTemp);
                 }
                 Subscriber newOne = new Subscriber(myResponse.getString("subscriber"), myResponse.getString("homeId"), myResponse.getString("boilerType"), myResponse.getString("airConditionerType"), subscriberTemp);
-                //newOne.printSubscriber(); Print test
+//                newOne.printSubscriber();     //Print test - data valid
                 subscriberList.add(newOne);
                 subscriberTemp.clear();
             }
@@ -80,9 +80,9 @@ public class Loader implements iLoader{
             e.printStackTrace();
         }
         return subscriberList;
-    }
+   }
 
-    }
+}
 
 
 
