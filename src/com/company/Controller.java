@@ -1,5 +1,13 @@
 package com.company;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +66,36 @@ public class Controller {
         subscribers.add(s);
     }
 
+    public void controlCheckService(List<Subscriber> subscribersList) throws Exception { //controllCheckService
+        for (int i = 0; i < subscribersList.size(); i++) {
+            iMonitor monitoredHome = new Monitor();
+            iDriver sendToHome = new Driver();
+            Session actualHome;
+            monitoredHome.getSession(subscribersList.get(i).getHomeId());
+            actualHome = monitoredHome.getMonitoredHome();
+            int statusFromServer = 0;
+            System.out.println("Kívánt hőmérséklet: " + Subscriber.getTemperatureForNow(subscribersList.get(i)) + " - Lekérdezett hőmérséklet: " + actualHome.getTemperature());
+            if (Subscriber.getTemperatureForNow(subscribersList.get(i)) >= actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
+            {
+                System.out.println("Fűtés szükséges!");
+                statusFromServer = sendToHome.sendCommand(subscribersList.get(i), true, false);
+            } // IF hőmérséklet összehasonlítása
+            else //Magasabb a hőmérséklet a kértnél, hűtés szükséges!
+            {
+                System.out.println("Hűtés szükséges!");
+                statusFromServer = sendToHome.sendCommand(subscribersList.get(i), false, true);
+            }
+                //System.out.println(response.toString());
+                if (statusFromServer == 100) {
+                    System.out.println("A szerver visszaigazolta a sikeres beállítást!");
+                }
+                if (statusFromServer == 101) {
+                    System.out.println("A szerver hibás parancs választ adott!");
+                }
+            }
+        }
+    }
+
     //void sendCommand()
 
-}
+

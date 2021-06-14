@@ -10,156 +10,201 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static java.lang.Integer.parseInt;
+
 public class Driver implements iDriver {
 
     // ide ele kerul majd a map<string<list<string>>>, ami az eszkoz es a hozza tartozo parancslista,
     // ebbol valaszt majd a metodus a map kulcsa szerint, majd vegul csinal egy hivast az eszkozre
-
     //Ez tarolja a mapet az eszkoz adatokkal...
-    Map<String, List<String>> bCommands;
-    //Map<String, List<String>> aCommands;
+    Map<String, List<String>> commands = new HashMap<String, List<String>>(); // HashMap típust kellet használni, a kulcs szerinti lekérdezéshez!
+
+    public Map<String, List<String>> getCommands() {
+        return commands;
+    }
+//Map<String, List<String>> aCommands;
 
     //konstructor
 
     public Driver() {
-        List<String> kazan1 = new ArrayList<String>();
-        kazan1.add("start");
-        kazan1.add("stop");
+        List<String> boiler1 = new ArrayList<String>();
+        boiler1.add("bX3434");
+        boiler1.add("bX1232");
+       // System.out.println(boiler1.get(0));
+        List<String> boiler2 = new ArrayList<String>();
+        boiler2.add("cX7898");
+        boiler2.add("cX3452");
+        List<String> air1 = new ArrayList<String>();
+        air1.add("bX5676");
+        air1.add("bX3421");
+        List<String> air2 = new ArrayList<String>();
+        air2.add("cX3452");
+        air2.add("cX5423");
         try {
-            assert bCommands != null;
-            bCommands.put("Kazan1", kazan1); //az eszkoz neve pl. Subscriber.boilerneve
+            assert commands != null;
+            commands.put("Boiler 1200W", boiler1);//az eszkoz neve pl. Subscriber.boilerneve
+            commands.put("Boiler p5600", boiler2);
+            commands.put("Air p5600", air1);
+            commands.put("Air c320", air2);
+            //System.out.println(this.commands.get("Boiler 1200W").get(0));
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        //String v = kazan1.get(1);
-        // ... igy tovabb az osszes kazanra
-        //String parancs = (bCommands.get("Kazan1").get(0)); //elindul parancs
+//        String v = kazan1.get(1);
+//         ... igy tovabb az osszes kazanra
+//        String parancs = (bCommands.get("Kazan1").get(0)); //elindul parancs
     }
 
-    ;
+
 
     @Override //annotation
     public int sendCommand(Subscriber subs, boolean boilerCommand, boolean airconCommand) throws Exception {
-        //visszaad valamit a proba kedveert
-        if (boilerCommand || airconCommand) {
-            if (boilerCommand && airconCommand) {
-                //
-                return 100; //ha mindketto mukodik, akkor mindketto leall
-            } else if (boilerCommand) {
-                //
-                return 100; //boiler leall
-            } else if (airconCommand) {
-                //
-                return 100; //aircon leall
+        iDriver sendToHome = new Driver();
+        URL url = new URL("http://193.6.19.58:8182/smarthome/" + subs.getHomeId());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "text/plain");
+        conn.setDoOutput(true);
+        String message;
+        JSONObject item = new JSONObject();
+        //System.out.println(sendToHome.getCommands().get(subs.getBoilerType()).get(0));
+        item.put("homeId", subs.getHomeId());
+        try {
+            if (boilerCommand) {
+                item.put("boilerCommand", sendToHome.getCommands().get(subs.getBoilerType()).get(0));
+            } else {
+                item.put("boilerCommand", sendToHome.getCommands().get(subs.getBoilerType()).get(1));
+            }
+            if (airconCommand) {
+                item.put("airConditionerCommand", sendToHome.getCommands().get(subs.getAirConditionerType()).get(0));
+            } else {
+                item.put("airConditionerCommand", sendToHome.getCommands().get(subs.getAirConditionerType()).get(1));
             }
         }
-        //ide logol majd
-        return 0; //semmi sem tortenik
+        catch (Exception e)
+        {
+           // e.printStackTrace();
+        }
+        message = item.toString();
+        System.out.println(message);
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = message.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+
+            return parseInt(response.toString());
+        }
     }
 
-    Driver d = new Driver();
 
     //TODO: át kell kerülnie a controllerbe
     // a hívások mennek a driver metóduson keresztül...
-    public void commandSend(List<Subscriber> subscribersList) throws Exception { //controllCheckService
-        for (int i = 0; i < subscribersList.size(); i++) {
-            iMonitor monitoredHome = new Monitor();
-            Session actualHome;
-            monitoredHome.getSession(subscribersList.get(i).getHomeId());
-            actualHome = monitoredHome.getMonitoredHome();
-            URL url = new URL("http://193.6.19.58:8182/smarthome/" + subscribersList.get(i).getHomeId());
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "text/plain");
-            conn.setDoOutput(true);
-            String message;
-            JSONObject item = new JSONObject();
-            item.put("homeId", subscribersList.get(i).getHomeId());
-            //TODO: össze kellene hasonlítani, hogy az aktuális időponthoz tartozó beállított hőmérséklethez képest megfelel-e a kapott hőmérséklet.
-            //TODO: Ha igen akkor nincs teendő, ha kisebb a hőmérséklet akkor a kazán típusához megefelő indító parancs küldése, légkondi leállítása és fordítva! KÉSZ
-            System.out.println("Kívánt hőmérséklet: " + Subscriber.getTemperatureForNow(subscribersList.get(i)) + " - Lekérdezett hőmérséklet: " + actualHome.getTemperature());
-            if (Subscriber.getTemperatureForNow(subscribersList.get(i)) >= actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
-            {
-                System.out.println("Fűtés szükséges!");
-                //System.out.println(subscribersList.get(i).getBoilerType());
-                switch (subscribersList.get(i).getBoilerTypeInt()) {
-                    case 1:
-                        System.out.println("Boiler 1200W");
-                        item.put("boilerCommand", "bX3434");
-                        break;
-                    case 2:
-                        System.out.println("Boiler p5600");
-                        item.put("boilerCommand", "cX7898");
-                        break;
-                    default:
-                        System.out.println("Ismeretlen kazán!");
-                }
-                switch (subscribersList.get(i).getAirTypeInt()) {
-                    case 1:
-                        System.out.println("Air p5600");
-                        item.put("airConditionerCommand", "bX3421");
-                        break;
-                    case 2:
-                        System.out.println("Air c320");
-                        item.put("airConditionerCommand", "cX5423");
-                        break;
-                    default:
-                        System.out.println("Ismeretlen légkondi!");
-                }
-            } // IF hőmérséklet összehasonlítása
-            else //Magasabb a hőmérséklet a kértnél, hűtés szükséges!
-            {
-                System.out.println("Hűtés szükséges!");
-                //System.out.println(subscribersList.get(i).getBoilerType());
-                switch (subscribersList.get(i).getBoilerTypeInt()) {
-                    case 1:
-                        System.out.println("Boiler 1200W");
-                        item.put("boilerCommand", "bX1232");
-                        break;
-                    case 2:
-                        System.out.println("Boiler p5600");
-                        item.put("boilerCommand", "cX3452");
-                        break;
-                    default:
-                        System.out.println("Ismeretlen kazán!");
-                }
-                switch (subscribersList.get(i).getAirTypeInt()) {
-                    case 1:
-                        System.out.println("Air p5600");
-                        item.put("airConditionerCommand", "bX5676");
-                        break;
-                    case 2:
-                        System.out.println("Air c320");
-                        item.put("airConditionerCommand", "cX3452");
-                        break;
-                    default:
-                        System.out.println("Ismeretlen légkondi!");
-                }
-            }
-//            System.out.println(item.getString("boilerCommand"));
-            message = item.toString();
-            System.out.println(message);
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = message.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-            try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine = null;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                //System.out.println(response.toString());
-                if (response.toString().equals("100")) {
-                    System.out.println("A szerver visszaigazolta a sikeres beállítást!");
-                }
-                if (response.toString().equals("101")) {
-                    System.out.println("A szerver hibás parancs választ adott!");
-                }
-            }
-        }
-    }
+//    public void commandSend(List<Subscriber> subscribersList) throws Exception { //controllCheckService
+//        for (int i = 0; i < subscribersList.size(); i++) {
+//            iMonitor monitoredHome = new Monitor();
+//            Session actualHome;
+//            monitoredHome.getSession(subscribersList.get(i).getHomeId());
+//            actualHome = monitoredHome.getMonitoredHome();
+//            URL url = new URL("http://193.6.19.58:8182/smarthome/" + subscribersList.get(i).getHomeId());
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setRequestMethod("POST");
+//            conn.setRequestProperty("Content-Type", "text/plain");
+//            conn.setDoOutput(true);
+//            String message;
+//            JSONObject item = new JSONObject();
+//            item.put("homeId", subscribersList.get(i).getHomeId());
+//            //TODO: össze kellene hasonlítani, hogy az aktuális időponthoz tartozó beállított hőmérséklethez képest megfelel-e a kapott hőmérséklet.
+//            //TODO: Ha igen akkor nincs teendő, ha kisebb a hőmérséklet akkor a kazán típusához megefelő indító parancs küldése, légkondi leállítása és fordítva! KÉSZ
+//            System.out.println("Kívánt hőmérséklet: " + Subscriber.getTemperatureForNow(subscribersList.get(i)) + " - Lekérdezett hőmérséklet: " + actualHome.getTemperature());
+//            if (Subscriber.getTemperatureForNow(subscribersList.get(i)) >= actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
+//            {
+//                System.out.println("Fűtés szükséges!");
+//                //System.out.println(subscribersList.get(i).getBoilerType());
+//                switch (subscribersList.get(i).getBoilerTypeInt()) {
+//                    case 1:
+//                        System.out.println("Boiler 1200W");
+//                        item.put("boilerCommand", "bX3434");
+//                        break;
+//                    case 2:
+//                        System.out.println("Boiler p5600");
+//                        item.put("boilerCommand", "cX7898");
+//                        break;
+//                    default:
+//                        System.out.println("Ismeretlen kazán!");
+//                }
+//                switch (subscribersList.get(i).getAirTypeInt()) {
+//                    case 1:
+//                        System.out.println("Air p5600");
+//                        item.put("airConditionerCommand", "bX3421");
+//                        break;
+//                    case 2:
+//                        System.out.println("Air c320");
+//                        item.put("airConditionerCommand", "cX5423");
+//                        break;
+//                    default:
+//                        System.out.println("Ismeretlen légkondi!");
+//                }
+//            } // IF hőmérséklet összehasonlítása
+//            else //Magasabb a hőmérséklet a kértnél, hűtés szükséges!
+//            {
+//                System.out.println("Hűtés szükséges!");
+//                //System.out.println(subscribersList.get(i).getBoilerType());
+//                switch (subscribersList.get(i).getBoilerTypeInt()) {
+//                    case 1:
+//                        System.out.println("Boiler 1200W");
+//                        item.put("boilerCommand", "bX1232");
+//                        break;
+//                    case 2:
+//                        System.out.println("Boiler p5600");
+//                        item.put("boilerCommand", "cX3452");
+//                        break;
+//                    default:
+//                        System.out.println("Ismeretlen kazán!");
+//                }
+//                switch (subscribersList.get(i).getAirTypeInt()) {
+//                    case 1:
+//                        System.out.println("Air p5600");
+//                        item.put("airConditionerCommand", "bX5676");
+//                        break;
+//                    case 2:
+//                        System.out.println("Air c320");
+//                        item.put("airConditionerCommand", "cX3452");
+//                        break;
+//                    default:
+//                        System.out.println("Ismeretlen légkondi!");
+//                }
+//            }
+////            System.out.println(item.getString("boilerCommand"));
+//            message = item.toString();
+//            System.out.println(message);
+//            try (OutputStream os = conn.getOutputStream()) {
+//                byte[] input = message.getBytes(StandardCharsets.UTF_8);
+//                os.write(input, 0, input.length);
+//            }
+//            try (BufferedReader br = new BufferedReader(
+//                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+//                StringBuilder response = new StringBuilder();
+//                String responseLine = null;
+//                while ((responseLine = br.readLine()) != null) {
+//                    response.append(responseLine.trim());
+//                }
+//                //System.out.println(response.toString());
+//                if (response.toString().equals("100")) {
+//                    System.out.println("A szerver visszaigazolta a sikeres beállítást!");
+//                }
+//                if (response.toString().equals("101")) {
+//                    System.out.println("A szerver hibás parancs választ adott!");
+//                }
+//            }
+//        }
+//    }
 }
 
 //        http://193.6.19.58:8182/smarthome/KD34AF24DS

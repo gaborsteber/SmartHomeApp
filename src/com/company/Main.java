@@ -5,8 +5,12 @@ public class Main {
 
     public static void main(String[] args){
         List<Subscriber> subscribersList = null;
+        List<Driver> driversList = null;
+        List<Monitor> monitorsList = null;
         iLoader subscribersToLoader = new Loader();
-        iDriver commandService = new Driver();
+        iMonitor getDataForMonitoring = new Monitor();
+//        iDriver commandService = new Driver();
+        Controller commandService = new Controller(monitorsList, driversList, subscribersList);
 
 //        try {
 //            GetDataFromServer.getDataFrom();
@@ -78,13 +82,13 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-        try {
-            commandService.commandSend(subscribersList);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+//        try {
+//            commandService.commandSend(subscribersList);
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
         // commandService method kész, megkapja a feliratkozók listáját, majd egyesével lekérdezi az okosotthonok
         // aktuális állapotát, végül elvégzi a szükséges műveletet.
 
@@ -96,6 +100,14 @@ public class Main {
 //        if (myInt == 100) {
 //              //eredmény kiértékelése
 //        }
+        try {
+            commandService.controlCheckService(subscribersList);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
    }
 
 }
