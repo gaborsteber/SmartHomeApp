@@ -72,7 +72,7 @@ public class Loader implements iLoader {
 
                 while (iterate.hasNext()) {
                     org.json.JSONObject myTemps = new org.json.JSONObject(iterate.next().toString());
-                    Temperature newTemp = new Temperature(myTemps.getString("period"), myTemps.getInt("temperature"));
+                    Temperature newTemp = new Temperature(myTemps.getString("period"), myTemps.getDouble("temperature"));
 //                    System.out.println(newTemp.period +" , " + newTemp.temperature);  //Print test - data valid
                     subscriberTemp.add(newTemp);
                 }

@@ -4,15 +4,9 @@ import java.util.List;
 
 interface iLoader {
 
-    default void loadSubscribers(String fajlnev) throws Exception {
+    void loadSubscribers(String fajlnev) throws Exception;
 
-    };
+    public List<Subscriber> loadSubscribersToList(String fajlNev) throws Exception;
 
-    default List<Subscriber> loadSubscribersToList(String fajlNev) throws Exception {
-        return null;
-    };
-
-    default List<Subscriber> getSubscribers(){
-        return null;
-    }
+    public List<Subscriber> getSubscribers();
 }

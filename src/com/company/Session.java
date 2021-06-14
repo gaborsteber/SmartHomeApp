@@ -2,11 +2,11 @@ package com.company;
 
 public class Session {
     private String sessionId;
-    private int temperature;
+    private double temperature;
     private boolean boilerState;
     private boolean airConditionerState;
 
-    public Session(String _sessionId, int _temperature, boolean _boilerState, boolean _airConditionerState) {
+    public Session(String _sessionId, double _temperature, boolean _boilerState, boolean _airConditionerState) {
         this.sessionId = _sessionId;
         this.temperature = _temperature;
         this.boilerState = _boilerState;
@@ -17,7 +17,7 @@ public class Session {
         return sessionId;
     }
 
-    public int getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 

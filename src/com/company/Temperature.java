@@ -2,9 +2,9 @@ package com.company;
 
 public class Temperature {
     private String period;
-    private int temperature;
+    private double temperature;
 
-    Temperature(String _period,  int _temperature)
+    Temperature(String _period,  double _temperature)
     {
         period = _period;
         temperature = _temperature;
@@ -20,7 +20,8 @@ public class Temperature {
         return period;
     }
 
-    public int getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
+
 }
