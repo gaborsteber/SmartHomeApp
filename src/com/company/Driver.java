@@ -6,10 +6,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Driver implements iDriver {
 
@@ -22,11 +19,10 @@ public class Driver implements iDriver {
         kazan1.add("parancs1");
         kazan1.add("parancs2");
         commands.put("Kazan1", kazan1);
-
         // ... igy tovabb az osszes kazanra
 
     };
-
+    //Ez tarolja a mapet az eszkoz adatokkal...
     Map<String, List<String>> commands;
 
     @Override //annotation
