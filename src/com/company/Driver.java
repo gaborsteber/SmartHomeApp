@@ -18,7 +18,13 @@ public class Driver implements iDriver {
         List<String> kazan1 = new ArrayList<String>();
         kazan1.add("parancs1");
         kazan1.add("parancs2");
-        commands.put("Kazan1", kazan1);
+        try {
+            assert commands != null;
+            commands.put("Kazan1", kazan1);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        String v = kazan1.get(2);
         // ... igy tovabb az osszes kazanra
 
     };
