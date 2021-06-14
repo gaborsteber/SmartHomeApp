@@ -11,14 +11,14 @@ public class Controller {
 
     List<Monitor> monitors = new ArrayList<>();
     List<Driver> drivers = new ArrayList<>();
-    List<Loader> loaders = new ArrayList<>();
+    List<Subscriber> subscribers = new ArrayList<>();
 
     //constructor mindharom adattaggal
 
-    public Controller(List<Monitor> monitors, List<Driver> drivers, List<Loader> loaders) {
+    public Controller(List<Monitor> monitors, List<Driver> drivers, List<Subscriber> subscribers) {
         this.monitors = monitors;
         this.drivers = drivers;
-        this.loaders = loaders;
+        this.subscribers = subscribers;
     }
 
     //settere es getterek kovetkeznek, ha kesobb kellenenek
@@ -38,12 +38,12 @@ public class Controller {
         this.drivers = drivers;
     }
 
-    public List<Loader> getLoaders() {
-        return loaders;
+    public List<Subscriber> getLoaders() {
+        return subscribers;
     }
 
-    public void setLoaders(List<Loader> loaders) {
-        this.loaders = loaders;
+    public void setSubscriber(List<Subscriber> subscribers) {
+        this.subscribers = subscribers;
     }
 
     public void addMonitor(Monitor m) {
@@ -54,8 +54,8 @@ public class Controller {
         drivers.add(d);
     }
 
-    public void addLoader(Loader l) {
-        loaders.add(l);
+    public void addSubscriber(Subscriber s) {
+        subscribers.add(s);
     }
 
     //void sendCommand()

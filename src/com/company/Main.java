@@ -8,7 +8,7 @@ public class Main {
         iLoader subscribersToLoader = new Loader();
         iDriver commandService = new Driver();
 
-        //        try {
+//        try {
 //            GetDataFromServer.getDataFrom();
 //        } catch (Exception e) {
 //            e.printStackTrace();
@@ -88,6 +88,14 @@ public class Main {
         // commandService method kész, megkapja a feliratkozók listáját, majd egyesével lekérdezi az okosotthonok
         // aktuális állapotát, végül elvégzi a szükséges műveletet.
 
+        //Driver test
+
+//        iDriver dd = new Driver();
+//
+//        int myInt = dd.sendCommand(subscribersList.get(1), true, true);
+//        if (myInt == 100) {
+//              //eredmény kiértékelése
+//        }
    }
 
 }

@@ -1,5 +1,7 @@
 package com.company;
+
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -13,23 +15,28 @@ public class Driver implements iDriver {
     // ide ele kerul majd a map<string<list<string>>>, ami az eszkoz es a hozza tartozo parancslista,
     // ebbol valaszt majd a metodus a map kulcsa szerint, majd vegul csinal egy hivast az eszkozre
 
+    //Ez tarolja a mapet az eszkoz adatokkal...
+    Map<String, List<String>> bCommands;
+    //Map<String, List<String>> aCommands;
+
     //konstructor
+
     public Driver() {
         List<String> kazan1 = new ArrayList<String>();
-        kazan1.add("parancs1");
-        kazan1.add("parancs2");
+        kazan1.add("start");
+        kazan1.add("stop");
         try {
-            assert commands != null;
-            commands.put("Kazan1", kazan1);
+            assert bCommands != null;
+            bCommands.put("Kazan1", kazan1); //az eszkoz neve pl. Subscriber.boilerneve
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        String v = kazan1.get(2);
+        //String v = kazan1.get(1);
         // ... igy tovabb az osszes kazanra
+        //String parancs = (bCommands.get("Kazan1").get(0)); //elindul parancs
+    }
 
-    };
-    //Ez tarolja a mapet az eszkoz adatokkal...
-    Map<String, List<String>> commands;
+    ;
 
     @Override //annotation
     public int sendCommand(Subscriber subs, boolean boilerCommand, boolean airconCommand) throws Exception {
@@ -50,8 +57,12 @@ public class Driver implements iDriver {
         return 0; //semmi sem tortenik
     }
 
-    public void commandSend(List<Subscriber> subscribersList) throws Exception {
-        for(int i=0; i<subscribersList.size(); i++) {
+    Driver d = new Driver();
+
+    //TODO: át kell kerülnie a controllerbe
+    // a hívások mennek a driver metóduson keresztül...
+    public void commandSend(List<Subscriber> subscribersList) throws Exception { //controllCheckService
+        for (int i = 0; i < subscribersList.size(); i++) {
             iMonitor monitoredHome = new Monitor();
             Session actualHome;
             monitoredHome.getSession(subscribersList.get(i).getHomeId());
@@ -71,7 +82,7 @@ public class Driver implements iDriver {
             {
                 System.out.println("Fűtés szükséges!");
                 //System.out.println(subscribersList.get(i).getBoilerType());
-                switch(subscribersList.get(i).getBoilerTypeInt()){
+                switch (subscribersList.get(i).getBoilerTypeInt()) {
                     case 1:
                         System.out.println("Boiler 1200W");
                         item.put("boilerCommand", "bX3434");
@@ -83,7 +94,7 @@ public class Driver implements iDriver {
                     default:
                         System.out.println("Ismeretlen kazán!");
                 }
-                switch(subscribersList.get(i).getAirTypeInt()) {
+                switch (subscribersList.get(i).getAirTypeInt()) {
                     case 1:
                         System.out.println("Air p5600");
                         item.put("airConditionerCommand", "bX3421");
@@ -100,7 +111,7 @@ public class Driver implements iDriver {
             {
                 System.out.println("Hűtés szükséges!");
                 //System.out.println(subscribersList.get(i).getBoilerType());
-                switch(subscribersList.get(i).getBoilerTypeInt()){
+                switch (subscribersList.get(i).getBoilerTypeInt()) {
                     case 1:
                         System.out.println("Boiler 1200W");
                         item.put("boilerCommand", "bX1232");
@@ -112,7 +123,7 @@ public class Driver implements iDriver {
                     default:
                         System.out.println("Ismeretlen kazán!");
                 }
-                switch(subscribersList.get(i).getAirTypeInt()) {
+                switch (subscribersList.get(i).getAirTypeInt()) {
                     case 1:
                         System.out.println("Air p5600");
                         item.put("airConditionerCommand", "bX5676");
@@ -140,12 +151,10 @@ public class Driver implements iDriver {
                     response.append(responseLine.trim());
                 }
                 //System.out.println(response.toString());
-                if (response.toString().equals("100"))
-                {
+                if (response.toString().equals("100")) {
                     System.out.println("A szerver visszaigazolta a sikeres beállítást!");
                 }
-                if (response.toString().equals("101"))
-                {
+                if (response.toString().equals("101")) {
                     System.out.println("A szerver hibás parancs választ adott!");
                 }
             }
