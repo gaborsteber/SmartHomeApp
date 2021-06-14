@@ -13,7 +13,8 @@ import static java.lang.Integer.parseInt;
 public class Subscriber {
     private final String subscriber;
     private final String homeId;
-    private String boilerType = "No boiler";
+    //private String boilerType = "No boiler";
+    private String boilerType = new String("No boiler");
     private String airConditionerType = "No airconditioner";
     private List<Temperature> temperatures;
 
@@ -21,7 +22,7 @@ public class Subscriber {
     {
         this.subscriber = _subscriber;
         this.homeId = _homeId;
-        this.boilerType = _boilerType;
+        this.boilerType = _boilerType; //ez null nem lehet, csak ures string objektum
         this.airConditionerType = _airConditionerType;
         this.temperatures = new ArrayList<Temperature>(_temperatures);
     }
