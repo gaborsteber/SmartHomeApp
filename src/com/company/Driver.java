@@ -6,10 +6,30 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Driver implements iDriver {
-    @Override
+
+    // ide ele kerul majd a map<string<list<string>>>, ami az eszkoz es a hozza tartozo parancslista,
+    // ebbol valaszt majd a metodus a map kulcsa szerint, majd vegul csinal egy hivast az eszkozre
+
+    //konstructor
+    public Driver() {
+        List<String> kazan1 = new ArrayList<String>();
+        kazan1.add("parancs1");
+        kazan1.add("parancs2");
+        commands.put("Kazan1", kazan1);
+
+        // ... igy tovabb az osszes kazanra
+
+    };
+
+    Map<String, List<String>> commands;
+
+    @Override //annotation
     public int sendCommand(Subscriber subs, boolean boilerCommand, boolean airconCommand) throws Exception {
         //visszaad valamit a proba kedveert
         if (boilerCommand || airconCommand) {
@@ -24,6 +44,7 @@ public class Driver implements iDriver {
                 return 100; //aircon leall
             }
         }
+        //ide logol majd
         return 0; //semmi sem tortenik
     }
 
