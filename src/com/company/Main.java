@@ -40,7 +40,7 @@ public class Main {
 //        catch(Exception e) {
 //            e.printStackTrace();
 //        }
-// //       TODO: implement POST method in Driver class
+
       try{
           iLoader subscribersFromFile = new Loader();
           subscribersList = subscribersFromFile.loadSubscribersToList("subscribers.json");

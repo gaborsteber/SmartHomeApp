@@ -11,9 +11,7 @@ import org.json.JSONObject;
 public class PostDataToServer {
 
     public static void postDataTo() throws Exception {
-        /*TODO: a postDataToServer osztaly nem kell, hanem az alabbi a PostdataTo bekerul az Driverbe, ahol
-        majd a konkret utasitasokat kuldi ki. Át kell alakaítani, aztan refactorral torolni kell. A neve majd
-        a feladat 5.3 pontja szerint CommandService lesz.*/
+
         URL url = new URL("http://193.6.19.58:8182/smarthome/KD34AF24DS");
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setRequestMethod("POST");

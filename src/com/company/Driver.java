@@ -104,8 +104,7 @@ public class Driver implements iDriver {
     }
 
 
-    //TODO: át kell kerülnie a controllerbe
-    // a hívások mennek a driver metóduson keresztül...
+
 //    public void commandSend(List<Subscriber> subscribersList) throws Exception { //controllCheckService
 //        for (int i = 0; i < subscribersList.size(); i++) {
 //            iMonitor monitoredHome = new Monitor();
@@ -120,8 +119,6 @@ public class Driver implements iDriver {
 //            String message;
 //            JSONObject item = new JSONObject();
 //            item.put("homeId", subscribersList.get(i).getHomeId());
-//            //TODO: össze kellene hasonlítani, hogy az aktuális időponthoz tartozó beállított hőmérséklethez képest megfelel-e a kapott hőmérséklet.
-//            //TODO: Ha igen akkor nincs teendő, ha kisebb a hőmérséklet akkor a kazán típusához megefelő indító parancs küldése, légkondi leállítása és fordítva! KÉSZ
 //            System.out.println("Kívánt hőmérséklet: " + Subscriber.getTemperatureForNow(subscribersList.get(i)) + " - Lekérdezett hőmérséklet: " + actualHome.getTemperature());
 //            if (Subscriber.getTemperatureForNow(subscribersList.get(i)) >= actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
 //            {
