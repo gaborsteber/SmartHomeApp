@@ -66,7 +66,7 @@ public class Controller {
     }
 
     //A logolási metódus később került ide.
-    private void logFailure(String homeID, String subscriber) {
+    private void logFailure(String homeID, String subscriberID) {
         //hiba logolása fileba
         try {
             File logFile = new File("error_log_file.txt");
@@ -80,8 +80,8 @@ public class Controller {
             e.printStackTrace();
         }
         try {
-            FileWriter logWriter = new FileWriter("error_log_file.txt");
-            logWriter.write("Hibát rögzítettem a " + homeID + " azonosító számú házban, amelynek tulajdonosa " + subscriber +".");
+            FileWriter logWriter = new FileWriter("error_log_file.txt", true);
+            logWriter.append("Hibát rögzítettem a " + homeID + " azonosító számú házban, amelynek tulajdonosa " + subscriberID + ".");
             logWriter.close();
         } catch (Exception e) {
             System.out.println("Hiba történt a fájl kiírása során:");
@@ -90,24 +90,25 @@ public class Controller {
     }
 
     public void controlCheckService(List<Subscriber> subscribersList) throws Exception { //controllCheckService
+        double elvartHomerseklet;
+        double aktualisHomerseklet;
+        double elteres;
+        int statusFromServer = 0;
         for (int i = 0; i < subscribersList.size(); i++) {
             iMonitor homeMonitor = new Monitor();
             iDriver homeDriver = new Driver();
             Session actualHome;
             homeMonitor.getSession(subscribersList.get(i).getHomeId());
             actualHome = homeMonitor.getMonitoredHome();
-            int statusFromServer = 0;
             System.out.println("Kívánt hőmérséklet: " + Subscriber.getTemperatureForNow(subscribersList.get(i)) + " - Lekérdezett hőmérséklet: " + actualHome.getTemperature());
 
-            double elvartHomerseklet = Subscriber.getTemperatureForNow(subscribersList.get(i));
-            double aktualisHomerseklet = actualHome.getTemperature();
-            double elteres = (elvartHomerseklet - aktualisHomerseklet);
-            Math.abs(elteres);
+            elvartHomerseklet = Subscriber.getTemperatureForNow(subscribersList.get(i));
+            aktualisHomerseklet = actualHome.getTemperature();
+            elteres = (elvartHomerseklet - aktualisHomerseklet);
+            if (elteres < 0)
+                elteres = elteres * -1;
 
-            //TODO: itt biztosan jó a >=, nem fordítva kellene írni?
-            //TODO: szerintem a kód biztosan megfelel a feladat 3.4 pontjában kért megvalósításnak? Ezt beszéljük meg telefonon
-            //
-            if (Subscriber.getTemperatureForNow(subscribersList.get(i)) >= actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
+            if (Subscriber.getTemperatureForNow(subscribersList.get(i)) > actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
             {
                 //Ha a kivant legalább 20%-al eltér a jelenlegitől, akkor logolni kell a hibat egy fileba
                 if (elteres / (elvartHomerseklet / 100) > 20) {
@@ -117,14 +118,17 @@ public class Controller {
                 System.out.println("Fűtés szükséges!");
                 statusFromServer = homeDriver.sendCommand(subscribersList.get(i), true, false);
             } // IF hőmérséklet összehasonlítása
-            else //Magasabb a hőmérséklet a kértnél, hűtés szükséges!
+            else if (Subscriber.getTemperatureForNow(subscribersList.get(i)) < actualHome.getTemperature())//Magasabb a hőmérséklet a kértnél, hűtés szükséges!
             {
                 if (elteres / (elvartHomerseklet / 100) > 20) {
                     logFailure(subscribersList.get(i).getHomeId(), subscribersList.get(i).getSubscriber());
                     System.out.println("Feltételezhetően hibát észleletem, logolom!");
+                    logFailure(subscribersList.get(i).getHomeId(), subscribersList.get(i).getSubscriber());
                 }
                 System.out.println("Hűtés szükséges!");
                 statusFromServer = homeDriver.sendCommand(subscribersList.get(i), false, true);
+            } else {
+                statusFromServer = homeDriver.sendCommand(subscribersList.get(i), false, false);
             }
             //System.out.println(response.toString());
             if (statusFromServer == 100) {
