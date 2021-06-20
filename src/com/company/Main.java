@@ -6,61 +6,58 @@ import java.util.TimerTask;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         List<Subscriber> subscribersList = null;
         int millisInAMinute = 30000; //5 perchez 60000*5 re kell allitani
         long time = System.currentTimeMillis();
         int chooseFromMenu = 0;
         Scanner input = new Scanner(System.in);
 
-        try{
+        try {
             iLoader subscribersFromFile = new Loader();
             subscribersList = subscribersFromFile.loadSubscribersToList("subscribers.json");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         Controller commandService = new Controller(subscribersList);
+        while (chooseFromMenu != 3) {
+            System.out.println("MENU:");
+            System.out.println("1. Végrehajtás egyszer");
+            System.out.println("2. Időzített végrehajtás elinditasa");
+            System.out.println("3. Exit");
+            chooseFromMenu = input.nextInt();
 
-        System.out.println("MENU:");
-        System.out.println("1. Végrehajtás egyszer");
-        System.out.println("2. Időzített végrehajtás");
-        chooseFromMenu = input.nextInt();
-
-        switch (chooseFromMenu) {
-            case 1:
-                try {
-                    commandService.controlCheckService();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                break;
-            case 2:
-                Runnable update = new Runnable() {
-                    public void run() {
-                        System.out.println("...........run again...........");
-                        try {
-                            commandService.controlCheckService();
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
+            switch (chooseFromMenu) {
+                case 1:
+                    try {
+                        commandService.controlCheckService();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                };
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    public void run() {
-                        update.run();
-                    }
-                }, time % millisInAMinute, millisInAMinute);
+                    break;
+                case 2:
+                    Runnable update = new Runnable() {
+                        public void run() {
+                            System.out.println("...........I am running again...........");
+                            try {
+                                commandService.controlCheckService();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        public void run() {
+                            update.run();
+                        }
+                    }, time % millisInAMinute, millisInAMinute);
 
-                update.run();
-                break;
+                    update.run();
+                    break;
             }
+        }
     }
 
 }

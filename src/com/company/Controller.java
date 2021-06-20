@@ -36,13 +36,13 @@ public class Controller {
         subscribers.add(s);
     }
 
-    //A logolási metódus később került ide.
+    //A logolási metódus később került ide
     private void logFailure(String homeID, String subscriberID) {
         //hiba logolása fileba
         try {
             File logFile = new File("error_log_file.txt");
             if (logFile.createNewFile()) {
-                System.out.println("Elkészítettem a hibák logolására való fájlt: " + logFile.getName() + " és ide írok...");
+                System.out.println("Elkészítettem a hibák logolására való fájlt: " + logFile.getName() + " és ide írok..." + "\n");
             } else {
                 System.out.println("A már létező log file-ba írok...");
             }
@@ -52,7 +52,7 @@ public class Controller {
         }
         try {
             FileWriter logWriter = new FileWriter("error_log_file.txt", true);
-            logWriter.append("Hibát rögzítettem a " + homeID + " azonosító számú házban, amelynek tulajdonosa " + subscriberID + ".");
+            logWriter.append("Hibát rögzítettem a " + homeID + " azonosító számú házban, amelynek tulajdonosa " + subscriberID + "." + "\n");
             logWriter.close();
         } catch (Exception e) {
             System.out.println("Hiba történt a fájl kiírása során:");
