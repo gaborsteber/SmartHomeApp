@@ -16,33 +16,12 @@ public class Controller {
     leglabb ket hazra van internetes elres, ezert listat alkalmazunk, ahova legalabb ketto hazra
     elhelyezhetoek az adatok. Megfelelo sorrendben kell oket elhelyezni a listakban.*/
 
-    List<Monitor> monitors;
-    List<Driver> drivers;
     List<Subscriber> subscribers;
 
     //constructor mindharom adattaggal
 
-    public Controller(List<Monitor> monitors, List<Driver> drivers, List<Subscriber> subscribers) {
-        this.monitors = monitors;
-        this.drivers = drivers;
+    public Controller(List<Subscriber> subscribers) {
         this.subscribers = subscribers;
-    }
-
-    //settere es getterek kovetkeznek, ha kesobb kellenenek
-    public List<Monitor> getMonitors() {
-        return monitors;
-    }
-
-    public void setMonitors(List<Monitor> monitors) {
-        this.monitors = monitors;
-    }
-
-    public List<Driver> getDrivers() {
-        return drivers;
-    }
-
-    public void setDrivers(List<Driver> drivers) {
-        this.drivers = drivers;
     }
 
     public List<Subscriber> getLoaders() {
@@ -51,14 +30,6 @@ public class Controller {
 
     public void setSubscriber(List<Subscriber> subscribers) {
         this.subscribers = subscribers;
-    }
-
-    public void addMonitor(Monitor m) {
-        monitors.add(m);
-    }
-
-    public void addDriver(Driver d) {
-        drivers.add(d);
     }
 
     public void addSubscriber(Subscriber s) {
@@ -89,7 +60,7 @@ public class Controller {
         }
     }
 
-    public void controlCheckService(List<Subscriber> subscribersList) throws Exception { //controllCheckService
+    public void controlCheckServiceWithParameter(List<Subscriber> subscribersList) throws Exception { //controllCheckService
         double elvartHomerseklet;
         double aktualisHomerseklet;
         double elteres;
@@ -140,6 +111,59 @@ public class Controller {
             }
         }
     }
+
+    public void controlCheckService() throws Exception { //controllCheckService
+        double elvartHomerseklet;
+        double aktualisHomerseklet;
+        double elteres;
+        int statusFromServer = 0;
+        for (int i = 0; i < subscribers.size(); i++) {
+            iMonitor homeMonitor = new Monitor();
+            iDriver homeDriver = new Driver();
+            Session actualHome;
+            homeMonitor.getSession(subscribers.get(i).getHomeId());
+            actualHome = homeMonitor.getMonitoredHome();
+            System.out.println("Kívánt hőmérséklet: " + Subscriber.getTemperatureForNow(subscribers.get(i)) + " - Lekérdezett hőmérséklet: " + actualHome.getTemperature());
+
+            elvartHomerseklet = Subscriber.getTemperatureForNow(subscribers.get(i));
+            aktualisHomerseklet = actualHome.getTemperature();
+            elteres = (elvartHomerseklet - aktualisHomerseklet);
+            if (elteres < 0)
+                elteres = elteres * -1;
+
+            if (Subscriber.getTemperatureForNow(subscribers.get(i)) > actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
+            {
+                //Ha a kivant legalább 20%-al eltér a jelenlegitől, akkor logolni kell a hibat egy fileba
+                if (elteres / (elvartHomerseklet / 100) > 20) {
+                    System.out.println("Feltételezhetően hibát észleletem, logolom!");
+                    logFailure(subscribers.get(i).getHomeId(), subscribers.get(i).getSubscriber());
+                }
+                System.out.println("Fűtés szükséges!");
+                statusFromServer = homeDriver.sendCommand(subscribers.get(i), true, false);
+            } // IF hőmérséklet összehasonlítása
+            else if (Subscriber.getTemperatureForNow(subscribers.get(i)) < actualHome.getTemperature())//Magasabb a hőmérséklet a kértnél, hűtés szükséges!
+            {
+                if (elteres / (elvartHomerseklet / 100) > 20) {
+                    logFailure(subscribers.get(i).getHomeId(), subscribers.get(i).getSubscriber());
+                    System.out.println("Feltételezhetően hibát észleletem, logolom!");
+                    logFailure(subscribers.get(i).getHomeId(), subscribers.get(i).getSubscriber());
+                }
+                System.out.println("Hűtés szükséges!");
+                statusFromServer = homeDriver.sendCommand(subscribers.get(i), false, true);
+            } else {
+                statusFromServer = homeDriver.sendCommand(subscribers.get(i), false, false);
+            }
+            //System.out.println(response.toString());
+            if (statusFromServer == 100) {
+                System.out.println("A szerver visszaigazolta a sikeres beállítást!");
+            }
+            if (statusFromServer == 101 || statusFromServer == 102) {
+                System.out.println("A szerver hibás parancs választ adott!");
+
+            }
+        }
+    }
+
 }
 
 //void sendCommand()

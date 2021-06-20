@@ -10,7 +10,7 @@ public class Main {
         iLoader subscribersToLoader = new Loader();
         iMonitor getDataForMonitoring = new Monitor();
 //        iDriver commandService = new Driver();
-        Controller commandService = new Controller(monitorsList, driversList, subscribersList);
+
 
 //        try {
 //            GetDataFromServer.getDataFrom();
@@ -100,8 +100,9 @@ public class Main {
 //        if (myInt == 100) {
 //              //eredmény kiértékelése
 //        }
+        Controller commandService = new Controller(subscribersList);
         try {
-            commandService.controlCheckService(subscribersList);
+            commandService.controlCheckService();
         }
         catch (Exception e)
         {
