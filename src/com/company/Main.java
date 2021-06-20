@@ -11,19 +11,6 @@ public class Main {
         iMonitor getDataForMonitoring = new Monitor();
 //        iDriver commandService = new Driver();
 
-
-//        try {
-//            GetDataFromServer.getDataFrom();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-//        try {
-//            GetDataFromServer.getDataFromWithUrl("KD34AF24DS");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
 //        try {
 //            iMonitor getDataForMonitoring = new Monitor();
 //            getDataForMonitoring.getSession("KD34AF24DS");
@@ -34,13 +21,6 @@ public class Main {
 //        }
 ////      Testing: data from server: 95FCR - 18 - true - true
 //
-//        try {
-//            PostDataToServer.postDataTo();
-//        }
-//        catch(Exception e) {
-//            e.printStackTrace();
-//        }
-
       try{
           iLoader subscribersFromFile = new Loader();
           subscribersList = subscribersFromFile.loadSubscribersToList("subscribers.json");
