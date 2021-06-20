@@ -1,15 +1,86 @@
 package com.company;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main {
 
     public static void main(String[] args){
         List<Subscriber> subscribersList = null;
-        List<Driver> driversList = null;
-        List<Monitor> monitorsList = null;
-        iLoader subscribersToLoader = new Loader();
-        iMonitor getDataForMonitoring = new Monitor();
+        int millisInAMinute = 30000; //5 perchez 60000*5 re kell allitani
+        long time = System.currentTimeMillis();
+        int chooseFromMenu = 0;
+        Scanner input = new Scanner(System.in);
+
+        try{
+            iLoader subscribersFromFile = new Loader();
+            subscribersList = subscribersFromFile.loadSubscribersToList("subscribers.json");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Controller commandService = new Controller(subscribersList);
+
+        System.out.println("MENU:");
+        System.out.println("1. Végrehajtás egyszer");
+        System.out.println("2. Időzített végrehajtás");
+        chooseFromMenu = input.nextInt();
+
+        switch (chooseFromMenu) {
+            case 1:
+                try {
+                    commandService.controlCheckService();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                break;
+            case 2:
+                Runnable update = new Runnable() {
+                    public void run() {
+                        System.out.println("...........run again...........");
+                        try {
+                            commandService.controlCheckService();
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    public void run() {
+                        update.run();
+                    }
+                }, time % millisInAMinute, millisInAMinute);
+
+                update.run();
+                break;
+            }
+    }
+
+}
+
+//        List<Driver> driversList = null;
+//        List<Monitor> monitorsList = null;
+//        iLoader subscribersToLoader = new Loader();
+//        iMonitor getDataForMonitoring = new Monitor();
 //        iDriver commandService = new Driver();
+
+//            try{
+//                iLoader subscribersFromFile = new Loader();
+//                subscribersList = subscribersFromFile.loadSubscribersToList("subscribers.json");
+////          for(int i=0; i<subscribersList.size(); i++) {
+////              subscribersList.get(i).printSubscriber();
+////          }
+//// Global Subscriber List print test - data valid!
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
 
 //        try {
 //            iMonitor getDataForMonitoring = new Monitor();
@@ -21,17 +92,6 @@ public class Main {
 //        }
 ////      Testing: data from server: 95FCR - 18 - true - true
 //
-      try{
-          iLoader subscribersFromFile = new Loader();
-          subscribersList = subscribersFromFile.loadSubscribersToList("subscribers.json");
-//          for(int i=0; i<subscribersList.size(); i++) {
-//              subscribersList.get(i).printSubscriber();
-//          }
-// Global Subscriber List print test - data valid!
-      }
-      catch (Exception e){
-            e.printStackTrace();
-      }
 //
 //        try{
 //            subscribersToLoader.loadSubscribers("subscribers.json");
@@ -80,15 +140,12 @@ public class Main {
 //        if (myInt == 100) {
 //              //eredmény kiértékelése
 //        }
-        Controller commandService = new Controller(subscribersList);
-        try {
-            commandService.controlCheckService();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
-   }
+//      try {
+//            commandService.controlCheckService();
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
 
-}
