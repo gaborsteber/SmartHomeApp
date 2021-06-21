@@ -134,7 +134,7 @@ public class Controller {
             if (Subscriber.getTemperatureForNow(subscribers.get(i)) > actualHome.getTemperature())  //A kértnél alacsonyabb a hőmérésklet, fűtés szükséges!
             {
                 //Ha a kivant legalább 20%-al eltér a jelenlegitől, akkor logolni kell a hibat egy fileba
-                if (elteres / (elvartHomerseklet / 100) > 20) {
+                if (elteres / (aktualisHomerseklet / 100) >= 20) {
                     System.out.println("Feltételezhetően hibát észleletem, logolom!");
                     logFailure(subscribers.get(i).getHomeId(), subscribers.get(i).getSubscriber());
                 }
@@ -143,7 +143,7 @@ public class Controller {
             } // IF hőmérséklet összehasonlítása
             else if (Subscriber.getTemperatureForNow(subscribers.get(i)) < actualHome.getTemperature())//Magasabb a hőmérséklet a kértnél, hűtés szükséges!
             {
-                if (elteres / (elvartHomerseklet / 100) > 20) {
+                if (elteres / (aktualisHomerseklet / 100) >= 20) {
                     logFailure(subscribers.get(i).getHomeId(), subscribers.get(i).getSubscriber());
                     System.out.println("Feltételezhetően hibát észleletem, logolom!");
                     logFailure(subscribers.get(i).getHomeId(), subscribers.get(i).getSubscriber());
